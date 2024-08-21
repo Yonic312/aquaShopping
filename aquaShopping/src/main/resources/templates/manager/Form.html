@@ -1,0 +1,57 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>majustory.com</title>
+</head>
+
+<div th:replace="~{/include/topMenu}"></div>
+<div th:replace="~{/include/top}"></div>
+
+<section>
+<div style='background-color:#ffffff; margin:auto; min-height:500px;' class="box1">
+	<div class="content1"align="center">
+		<div style = "line-height:70%;" align = "left">
+<br>
+<div align = "center">
+<h2> 상품등록 </h2>
+<form name ="f1" action = "/manager/FormOK"
+	  method="post" enctype="multipart/form-data">
+<table border = 1>
+<tr><td>상품번호</td><td><input type = "text" name = "pid" th:value="${se}"></td></tr>
+<tr><td>이름</td><td><input type = "text" name = "pname"></td></tr>
+<tr><td>가격</td><td><input type = "text" name = "pprice"></td></tr>
+<tr><td>종류</td><td>
+		<select name="pkind">
+			<option value = "구피">구피</option>
+			<option value = "CRS/새우">CRS/새우</option>
+			<option value = "메다카">메다카</option>
+			<option value = "거북이">거북이</option>
+			<option value = "갑각/패각류">갑각/패각류</option>
+			<option value = "난생/난태생송사리">난생/난태생송사리</option>
+			<option value = "시클리드">시클리드</option>
+			<option value = "카라신/레인보우">카라신/레인보우</option>
+			<option value = "잉어과">잉어과</option>
+			<option value = "메기과">메기과</option>
+			<option value = "베타/구라미">베타/구라미</option>
+			<option value = "금붕어/비단잉어">금붕어/비단잉어</option>
+			<option value = "디스커스/엔젤">디스커스/엔젤</option>
+			<option value = "대형어/기수">대형어/기수</option>
+			<option value = "전경수초">전경수초</option>
+			<option value = "중경/후경 수초">중경/후경 수초</option>
+			<option value = "활착/구근/부상">활착/구근/부상</option>
+			<option value = "무균배양수초">무균배양수초</option>
+		</select></td></tr>
+<tr><td>정보</td><td><input type = "text" name = "pdesc"></td></tr>
+<tr><td>이미지</td><td><input type = "file" name = "pimg"></td></tr>
+<tr><td colspan = 2><input type = "submit" value = "저장하기"></td></tr>
+</table>
+</form>
+</div>
+<br>
+
+</div>
+</div> <!-- content -->
+</div> <!-- box -->
+</section>
+<div  th:replace="~{/include/bottom::footer}"></div>
+</body>

@@ -1,0 +1,49 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>majustory.com</title>
+</head>
+
+<script>
+	function Del(){
+		alert('del')
+		f1.action="/manager/delete"
+	}
+</script>
+<div th:replace="~{/include/topMenu}"></div>
+<div th:replace="~{/include/top}"></div>
+
+<section>
+<div style='background-color:#ffffff; margin:auto; min-height:500px;' class="box1">
+	<div class="content1"align="center">
+		<div style = "line-height:70%;" align = "left">
+		
+<br>
+<div align = "center">
+<h2> 상품수정(관리자) </h2>
+<form name ="f1" action = "/manager/update"
+	  method="post" enctype="multipart/form-data">
+<input type = "hidden" name = "pimgStr" th:value="${eli.pimgStr}">
+<input type = hidden name = pdesc th:value="${eli.pdesc}">
+<table border = 1>
+
+<tr><td>상품번호</td><td><input type = "text" name = "pid" th:value="${eli.pid}"></td></tr>
+<tr><td>이름</td><td><input type = "text" name = "pname" th:value="${eli.pname}"></td></tr>
+<tr><td>종류</td><td><input type = "text" name = "pkind" th:value="${eli.pkind}"></td></tr>
+<tr><td>가격</td><td><input type = "text" name = "pprice" th:value="${eli.pprice}"></td></tr>
+<tr><td>수량</td><td><input type = "number" name = "amount" value="1"></td></tr>
+
+<tr><td>이미지</td><td><img th:src="@{/product/files/{filename}(filename=${eli.pimgStr})}" width="120" height="120"></td></tr>
+<tr><td colspan = 2>
+	<input type = "submit" value = "수정하기"> &nbsp;
+	<input type = "submit" value = "삭제하기" onClick="Del()"> &nbsp;
+</td></tr>
+</table>
+</form>
+</div>
+<br>
+</div>
+</div> <!-- content -->
+</div> <!-- box -->
+</section>
+<div  th:replace="~{/include/bottom::footer}"></div>

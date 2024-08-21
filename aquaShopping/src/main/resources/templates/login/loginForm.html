@@ -1,0 +1,339 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans");
+.form-structor {
+   background-color: #222;
+   border-radius: 15px;
+   height: 660px;
+   width: 420px;
+   position: relative;
+   overflow: hidden;
+}
+
+.form-structor::after {
+   content: '';
+   opacity: .8;
+   position: absolute;
+   top: 0;
+   right: 0;
+   bottom: 0;
+   left: 0;
+   background-repeat: no-repeat;
+   background-position: left bottom;
+   background-size: 600px;
+   background-image: url("https://images.unsplash.com/photo-1503602642458-232111445657?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bf884ad570b50659c5fa2dc2cfb20ecf&auto=format&fit=crop&w=1000&q=100");
+}
+
+.form-structor .signup {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   -webkit-transform: translate(-50%, -50%);
+   width: 78%;
+   z-index: 5;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .signup.slide-up {
+   top: 6%;
+   -webkit-transform: translate(-50%, 0%);
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .signup.slide-up .form-holder, .form-structor .signup.slide-up .submit-btn {
+   opacity: 0;
+   visibility: hidden;
+}
+
+.form-structor .signup.slide-up .form-title {
+   font-size: 1.2em;
+   cursor: pointer;
+}
+
+.form-structor .signup.slide-up .form-title span {
+   margin-right: 6px;
+   opacity: 1;
+   visibility: visible;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .signup .form-title {
+   color: #fff;
+   font-size: 2.04em;
+   text-align: center;
+}
+
+.form-structor .signup .form-title span {
+   color: rgba(0, 0, 0, 0.4);
+   opacity: 0;
+   visibility: hidden;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .signup .form-holder {
+   border-radius: 15px;
+   background-color: #fff;
+   overflow: hidden;
+   margin-top: 60px;
+   opacity: 1;
+   visibility: visible;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .signup .form-holder .input {
+   border: 0;
+   outline: none;
+   box-shadow: none;
+   display: block;
+   height: 36px;
+   line-height: 36px;
+   padding: 9.6px 18px;
+   border-bottom: 1px solid #eee;
+   width: 100%;
+   font-size: 14.4px;
+}
+
+.form-structor .signup .form-holder .input:last-child {
+   border-bottom: 0;
+}
+
+.form-structor .signup .form-holder .input::-webkit-input-placeholder {
+   color: rgba(0, 0, 0, 0.4);
+}
+
+.form-structor .signup .submit-btn {
+   background-color: rgba(0, 0, 0, 0.4);
+   color: rgba(255, 255, 255, 0.7);
+   border: 0;
+   border-radius: 15px;
+   display: block;
+   margin: 18px auto;
+   padding: 18px 54px;
+   width: 100%;
+   font-size: 15.6px;
+   font-weight: bold;
+   cursor: pointer;
+   opacity: 1;
+   visibility: visible;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .signup .submit-btn:hover {
+   transition: all .3s ease;
+   background-color: rgba(0, 0, 0, 0.8);
+}
+
+.form-structor .login {
+   position: absolute;
+   top: 24%;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background-color: #fff;
+   z-index: 5;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .login::before {
+   content: '';
+   position: absolute;
+   left: 50%;
+   top: -24px;
+   -webkit-transform: translate(-50%, 0);
+   background-color: #fff;
+   width: 240%;
+   height: 300px;
+   border-radius: 50%;
+   z-index: 4;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .login .center {
+   position: absolute;
+   top: calc(60% - 12%);
+   left: 50%;
+   -webkit-transform: translate(-50%, -50%);
+   width: 78%;
+   z-index: 5;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .login .center .form-title {
+   color: #000;
+   font-size: 2.04em;
+   text-align: center;
+}
+
+.form-structor .login .center .form-title span {
+   color: rgba(0, 0, 0, 0.4);
+   opacity: 0;
+   visibility: hidden;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .login .center .form-holder {
+   border-radius: 15px;
+   background-color: #fff;
+   border: 1px solid #eee;
+   overflow: hidden;
+   margin-top: 60px;
+   opacity: 1;
+   visibility: visible;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .login .center .form-holder .input {
+   border: 0;
+   outline: none;
+   box-shadow: none;
+   display: block;
+   height: 36px;
+   line-height: 36px;
+   padding: 9.6px 18px;
+   border-bottom: 1px solid #eee;
+   width: 100%;
+   font-size: 14.4px;
+}
+
+.form-structor .login .center .form-holder .input:last-child {
+   border-bottom: 0;
+}
+
+.form-structor .login .center .form-holder .input::-webkit-input-placeholder {
+   color: rgba(0, 0, 0, 0.4);
+}
+
+.form-structor .login .center .submit-btn {
+   background-color: #6B92A4;
+   color: rgba(255, 255, 255, 0.7);
+   border: 0;
+   border-radius: 15px;
+   display: block;
+   margin: 18px auto;
+   padding: 18px 54px;
+   width: 100%;
+   font-size: 15.6px;
+   font-weight: bold;
+   cursor: pointer;
+   opacity: 1;
+   visibility: visible;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .login .center .submit-btn:hover {
+   transition: all .3s ease;
+   background-color: rgba(0, 0, 0, 0.8);
+}
+
+.form-structor .login.slide-up {
+   top: 88%;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .login.slide-up .center {
+   top: 12%;
+   -webkit-transform: translate(-50%, 0%);
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .login.slide-up .form-holder, .form-structor .login.slide-up .submit-btn {
+   opacity: 0;
+   visibility: hidden;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .login.slide-up .form-title {
+   font-size: 1.2em;
+   margin: 0;
+   padding: 0;
+   cursor: pointer;
+   -webkit-transition: all .3s ease;
+}
+
+.form-structor .login.slide-up .form-title span {
+   margin-right: 6px;
+   opacity: 1;
+   visibility: visible;
+   -webkit-transition: all .3s ease;
+}
+</style>
+<section>
+<div  th:replace="include/topMenu"></div>
+<div  th:replace="include/top"></div>
+<br>
+<div align="center">
+
+<!-- 회원가입 -->
+<div class="form-structor">
+<form action="/login/insert">
+  <div class="signup">
+    <h2 class="form-title" id="signup"><span>or</span>회원가입</h2>
+    <div class="form-holder">
+      <input type="text" name="username" class="input" placeholder="Id" />
+      <input type="text" name="password" class="input" placeholder="Password" />
+      <input type="text" name="email" class="input" placeholder="Email" />
+      <input type="text" name="phonenumber" class="input" placeholder="Phonenumber (only number)" />
+    </div>
+    <button class="submit-btn">Sign up</button>
+  </div>
+  </form>
+<!-- 로그인 -->
+<form method=post>
+  <div class="login slide-up">
+    <div class="center">
+      <h2 class="form-title" id="login"><span>or</span>로그인</h2>
+      <div class="form-holder">
+        <input type="text" name="username" class="input"  placeholder="id" />
+        <input type="password" name="password" class="input" placeholder="Password" />
+      </div>
+      <input class="submit-btn" type="submit" value="Log in">
+    </div>
+  </div>
+</form>
+</div>
+
+<br>
+
+</div>
+</section>
+<div  th:replace="include/bottom::footer"></div>
+<script>
+console.clear();
+
+const loginBtn = document.getElementById('login');
+const signupBtn = document.getElementById('signup');
+
+// Signup 버튼 클릭 시
+signupBtn.addEventListener('click', (e) => {
+  let parent = e.target.parentNode;
+  // 현재 부모의 클래스 리스트에서 'slide-up'을 찾습니다.
+  Array.from(e.target.parentNode.classList).find((element) => {
+    if(element !== "slide-up") {
+      parent.classList.add('slide-up');
+    } else {
+      loginBtn.parentNode.parentNode.classList.add('slide-up');
+      parent.classList.remove('slide-up');
+    }
+  });
+});
+
+// Login 버튼 클릭 시
+loginBtn.addEventListener('click', (e) => {
+  let parent = e.target.parentNode.parentNode;
+  // 현재 부모의 클래스 리스트에서 'slide-up'을 찾습니다.
+  Array.from(e.target.parentNode.parentNode.classList).find((element) => {
+    if(element !== "slide-up") {
+      parent.classList.add('slide-up');
+    } else {
+      signupBtn.parentNode.classList.add('slide-up');
+      parent.classList.remove('slide-up');
+    }
+  });
+});
+
+// 페이지 로드 시 signup 버튼 클릭 이벤트 자동 호출
+window.addEventListener('load', () => {
+	loginBtn.click();
+});
+</script>
+</html>

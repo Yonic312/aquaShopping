@@ -1,0 +1,84 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>majustory.com</title>
+<style>
+    .scroll-table {
+        border-collapse: separate;
+        border-spacing: 8px; /* 셀 간격 설정 */
+    }
+    .scroll-table td {
+        padding: 7px; /* 셀 내부 패딩을 10px로 설정 */
+    }
+
+    .scroll-table img {
+        transition: transform 0.3s ease; /* 확대 효과의 애니메이션 시간 설정 (0.3초) */
+    }
+
+    .scroll-table img:hover {
+        transform: scale(1.1); /* 이미지 확대 비율 설정 (1.1 = 110%) */
+    }
+    
+    /* 짝수 번째 tr 배경색 설정 */
+    .scroll-table tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+</style>
+</head>
+
+<body>
+<div th:replace="~{/include/topMenu}"></div>
+<div th:replace="~{/include/top}"></div>
+<section>
+<div style='background-color:#ffffff; margin:auto; min-height:500px;' class="box1">
+    <div class="content1" align="center">
+        <div style="line-height:70%;" align="left">
+
+<br><br>
+<h2>&nbsp;검색어 "[[${title}]]" 포함된 목록</h2>
+<br><br><br>
+
+<h3>&nbsp;[[${count}]] Items</h3>
+<hr class="hr3"/>
+&emsp; <a th:href="@{/aquarium/search(keyword=${title},arrange=low)}">낮은 가격순</a> &emsp; <a th:href="@{/aquarium/search(keyword=${title},arrange=high)}">높은 가격순</a>
+<hr class="hr3"/>
+<div align="center">
+<table class="scroll-table">
+<th:block th:each="li, iterStat : ${productList}">
+        <!-- 시작을 알리는 tr 태그, 4개의 항목마다 새 tr 시작 -->
+        <tr th:if="${iterStat.index % 4 == 0}"></tr>
+        <td align="center">
+        <a th:href="@{/aquarium/order(pid=${li.pid})}">
+            <img th:src="@{/product/files/{filename}(filename=${li.pimgStr})}" width="200" height="200"> <br>
+                <hr class="hr4"/>
+                [[${li.pname}]] <br>
+                <hr class="hr4"/>
+                [[${li.pdesc}]] <br>
+                
+                <font color="#009ADB">
+                <span th:if="${#numbers.formatInteger(li.pprice, 0).length() >= 3}"
+				      th:text="${#numbers.formatInteger(li.pprice, 0, 'COMMA')} + '원'">
+				</span>
+				<span th:if="${#numbers.formatInteger(li.pprice, 0).length() < 3}"
+				      th:text="${li.pprice} + '원'">
+				</span>
+
+                </font>
+                
+                <br>
+                고객리뷰 : [[${li.cntReview}]]건
+            </a>
+        </td>
+        <!-- tr 종료를 알리는 조건, 4개의 항목마다 종료 -->
+        <tr th:if="${iterStat.index % 4 == 3}"></tr>
+    </th:block>
+</table>
+</div>
+<br>
+</div>
+</div> <!-- content -->
+</div> <!-- box -->
+</section>
+<div th:replace="~{/include/bottom::footer}"></div>
+</body>
+</html>

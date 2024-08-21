@@ -1,0 +1,47 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>majustory.com(결제화면)</title>
+</head>
+<div  th:replace="~{/include/topMenu}"></div>
+<div  th:replace="~{/include/top}"></div>
+
+<section>
+<div style='background-color:#ffffff; margin:auto; min-height:20px;' class="box1">
+	<div class="content1"align="center">
+		<div style = "line-height:70%;" align = "left">
+		
+<br><br><br><br>
+<div align="center">
+     <h2> 상세 주문 조회 </h2>
+     <br><br>
+     <th:block th:if="${result}!=null">
+     <th:block th:each="li, list : ${result}">
+     <table border=1 style="width: 300px;">
+     <tr>
+     	<td rowspan=4>[[${list.count}]]번</td>
+     	<td rowspan=4><img th:src="@{/product/files/{filename}(filename=${li.pimg})}" width="100" height="100"></td>
+     	<td>상품명</td><td>[[${li.pname}]]</td></tr>
+     	<td>상품코드</td><td>[[${li.pid}]]</td></tr>
+	    <tr><td>금액</td><td>[[${li.pprice}]]원</td></tr>
+	    <tr><td>수량</td><td>[[${li.amount}]]</td></tr>
+     </table>
+     <hr class=hr5 />
+     </th:block>
+     </th:block>
+     
+     <th:block th:if="${result}==null">
+     <table border=1 style="width: 300px;">
+     <tr><td> 주문내역이 없습니다. </td></tr>
+     </table>
+     </th:block>
+     <br><br><br>
+</div>
+
+
+</div>
+</div> <!-- content -->
+</div> <!-- box -->
+</section>     
+<div  th:replace="~{/include/bottom::footer}"></div>
+</body>

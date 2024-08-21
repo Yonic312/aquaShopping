@@ -1,0 +1,111 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>majustory.com</title>
+</head>
+
+<script>
+	function listK(){
+		f1.action="/aquarium/cartList"
+	}
+	function del(button) {
+	    var rid = button.getAttribute('data-rid');
+	    var pid = button.getAttribute('data-pid');
+	    alert('RID: ' + rid + ', PID: ' + pid);
+	    location.href = "/review/delete?rid=" + rid + "&pid=" + pid;
+	}
+
+</script>
+<div th:replace="~{/include/topMenu}"></div>
+<div  th:replace="~{/include/top}"></div>
+
+<section>
+<div style='background-color:#ffffff; margin:auto; min-height:500px;' class="box1">
+	<div class="content1"align="center">
+		<div style = "line-height:70%;" align = "left">
+
+<br>
+<div align = "center">
+<br><br><br><br>
+<h2> 상품주문(고객) </h2>
+<br><br><br>
+<form name ="f1" action = "/aquarium/cartInsert"
+method="Post">
+<input type = "hidden" name = "pimgStr" th:value="${eli.pimgStr}">
+<input type = "hidden"name = "pname" th:value="${eli.pname}">
+<input type = "hidden"name = "pprice" th:value="${eli.pprice}">
+<input type = "hidden"name = "pid" th:value="${eli.pid}">
+<table width=700px >
+<tr>
+	<td rowspan=7><img th:src="@{/product/files/{filename}(filename=${eli.pimgStr})}" width="360" height="360"></td>
+	<td colspan = 2 style="font-size: 26px; height: 70px;">[[${eli.pname}]] <hr class="hr3"></td>
+</tr>
+<tr><td style="font-size: 18px; color: #929292;">종류</td><td style="font-size: 24px;">[[${eli.pkind}]]</td></tr>
+<tr><td style="font-size: 18px; color: #929292;">가격</td><td style="font-size: 20px;">[[${eli.pprice}]]</td></tr>
+<tr><td style="font-size: 18px; color: #929292;">특이사항</td><td style="font-size: 20px;">[[${eli.pdesc}]]</td></tr>
+<tr><td style="font-size: 18px; color: #929292;">수량</td><td style="font-size: 22px;"><input style="width: 45px;" type = "number" name = "amount" value="1"></td></tr>
+<tr><td colspan=2 class="hr3"/></td></tr>
+
+<tr><td colspan = 2>
+	<input type = "submit" value = "주문하기" style="width: 80px; height: 35px; background: #000000; border: 1px solid #d4d4d4; color: #ffffff"> &nbsp;
+	<input type = "submit" value = "장바구니" onClick="listK()" style="width: 80px; height: 35px; background: #fcfcfc; border: 1px solid #d4d4d4;"> &nbsp;
+</td></tr>
+</table>
+</form>
+<br><br><br>
+<form action="/review/insert">
+	<input type = "hidden"name = "pid" th:value="${eli.pid}">
+	<table width=700px border=1> <!-- 후기 작성 테이블 -->
+		<tr>
+			<td>
+				<div class="star-rating">
+                <input type="radio" id="star5" name="star" value="5">
+                <label for="star5">★</label>
+                <input type="radio" id="star4" name="star" value="4">
+                <label for="star4">★</label>
+                <input type="radio" id="star3" name="star" value="3">
+                <label for="star3">★</label>
+                <input type="radio" id="star2" name="star" value="2">
+                <label for="star2">★</label>
+                <input type="radio" id="star1" name="star" value="1">
+                <label for="star1">★</label>
+            </div>
+			</td>
+			<td rowspan=2  width=100px><input type="submit" value="작성하기" style="width: 70px; height: 35px; background: #000000; border: 1px solid #d4d4d4; color: #ffffff"></td></tr>
+		<tr><td><textarea name="contents" style="width: 600px; font-size: 18px;" rows="3" placeholder="후기를 작성하세요!"></textarea></td></tr>
+	</table>
+	<table width="700px">
+    <tr>
+        <td><br><br>
+            <div align="left">후기 [[${cntRli}]]건</div>
+            <hr><br>
+        </td>
+    </tr>
+    <tr>
+        <td align="left">
+            <th:block th:each="rli : ${rli}"><br>
+                	<span th:each="i : ${#numbers.sequence(1, rli.star)}" 
+	                class="star">★</span>
+	                &nbsp; [[${rli.nowdate}]]
+	                <h3>[[${rli.rname}]]님
+	                    <span sec:authorize="hasRole('ROLE_ADMIN')">
+	                        <input type="button" value="x" 
+	                               th:data-rid="${rli.rid}" 
+	                               th:data-pid="${rli.pid}" onclick="del(this)">
+                    </span>
+                </h3><br>
+                <span style="font-size:19px;">[[${rli.contents}]]</span><br><br>
+                <hr><br><br>
+            </th:block>
+        </td>
+    </tr>
+</table>
+</form>
+</div>
+<br>
+</div>
+</div> <!-- content -->
+</div> <!-- box -->
+</section>
+<div  th:replace="~{/include/bottom::footer}"></div>
+</body>

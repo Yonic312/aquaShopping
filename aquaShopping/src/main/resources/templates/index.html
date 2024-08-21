@@ -1,0 +1,332 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const slider = document.querySelector('.slides');
+    const prevButton = document.querySelector('.slider-button.left');
+    const nextButton = document.querySelector('.slider-button.right');
+    const indicatorsContainer = document.querySelector('.indicators');
+    let currentIndex = 0;
+    const slideCount = slider.children.length;
+    const slideWidth = 930; // 슬라이더의 너비를 맞춰주세요.
+    const slideIntervalTime = 3500; // 3.5초 간격으로 설정
+    let slideInterval;
+
+    // 인디케이터 생성
+    const createIndicators = () => {
+        for (let i = 0; i < slideCount; i++) {
+            const indicator = document.createElement('div');
+            indicator.classList.add('indicator');
+            indicator.addEventListener('click', () => {
+                currentIndex = i;
+                showSlide(currentIndex);
+                updateIndicators();
+                startSlideInterval(); // 버튼 클릭 시 자동 슬라이드 타이머 재설정
+            });
+            indicatorsContainer.appendChild(indicator);
+        }
+    };
+
+    const showSlide = (index) => {
+        slider.style.transform = `translateX(-${index * slideWidth}px)`;
+        updateIndicators(); // 슬라이드 전환 시 인디케이터 업데이트
+    };
+
+    const nextSlide = () => {
+        currentIndex = (currentIndex + 1) % slideCount;
+        showSlide(currentIndex);
+    };
+
+    const prevSlide = () => {
+        currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+        showSlide(currentIndex);
+    };
+
+    const updateIndicators = () => {
+        const indicators = document.querySelectorAll('.indicator');
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentIndex);
+        });
+    };
+
+    const startSlideInterval = () => {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, slideIntervalTime);
+    };
+
+    // 자동 슬라이드 시작
+    createIndicators(); // 인디케이터 생성
+    startSlideInterval();
+
+    // 버튼 클릭 이벤트
+    nextButton.addEventListener('click', () => {
+        nextSlide();
+        startSlideInterval(); // 버튼 클릭 시 자동 슬라이드 타이머 재설정
+    });
+
+    prevButton.addEventListener('click', () => {
+        prevSlide();
+        startSlideInterval(); // 버튼 클릭 시 자동 슬라이드 타이머 재설정
+    });
+});
+</script>
+
+<section>
+<div  th:replace="include/topMenu"></div>
+<div  th:replace="include/top"></div>
+
+<div style='background-color:#ffffff; margin:auto;' class="box1">
+	<div class="content1"align="center">
+	
+	<div style="line-height:70%";align="center";>
+	<br>
+		<img src="/img/aquaLogo.png" width="220px" height="47.5px" align="left" class="main">
+		<div >
+		<form name='f2' class="search-box" action="/aquarium/search">
+			<input class="search-txt" name="keyword" type="text" placeholder="&emsp;검색어를 입력하세요.">
+			<button class="search-btn" type="submit">
+				<img src="/img/wing.png" width=20px height=20px class="search-icon"/>
+			</button>
+		</form>
+		</div>
+	
+	
+	<!-- 이미지 슬라이드 -->
+	<!-- <img src = "/img/광고.png" width = 920 height = 400 align="center"> -->
+	<div class="slider">
+    <button class="slider-button left">&#10094;</button> <!-- 왼쪽 버튼 -->
+    <div class="slides">
+        <img src="/img/광고1.png" width="930" height="310">
+        <img src="/img/광고2.jpg" width="930" height="310">
+        <img src="/img/광고3.png" width="930" height="310">
+    </div>
+    <button class="slider-button right">&#10095;</button> <!-- 오른쪽 버튼 -->
+    <div class="indicators">
+        <!-- JavaScript로 동적으로 생성될 인디케이터가 들어갈 자리 -->
+    </div>
+	</div>
+	<!-- 이미지 슬라이드 -->
+	
+<br><br>
+<hr class="hr3"/>
+<div align="left">
+    <h3>&nbsp;&nbsp;최근 등록된 상품</h3>
+    <hr class="hr3"/>
+</div>
+<table class="recent-table" style="width:900px">
+    <tr>
+        <td align="center" th:each="li : ${nli}">
+            <a th:href="@{/aquarium/order(pid=${li.pid})}">
+                <img th:src="@{/product/files/{filename}(filename=${li.pimgStr})}" width="185" height="185">
+                <hr class="hr1"/>
+                <span style="font-size: 15.5px;">[[${li.pname}]]</span>
+                <hr class="hr1"/>
+                <div class="price" style="font-size: 15.5px;">
+                    <span th:if="${li.pprice >= 1000}">[[${#numbers.formatInteger(li.pprice, 4, 'COMMA')}]]원</span>
+                    <span th:if="${li.pprice < 1000}">[[${li.pprice}]]원</span>
+                </div>
+                <hr class="hr1"/>
+                <div class="category" style="font-size: 15.5px;">[[${li.pkind}]]</div>
+            </a>
+        </td>
+    </tr>
+</table>
+<br><br>
+<hr class="hr3"/>
+<div align = "left">
+	<h3>&nbsp;&nbsp;수생동물 종류별 목록 </h3>
+</div>
+<hr class="hr3"/>
+</div>
+<table style="overflow-y: hidden" class="scroll-table">
+<div class="box-wrap">
+<td>
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=goofyList"><img src="/img/구피.jpg" width="150" height="150" alt="Hover Effect" />	
+	</div>
+    <div class="info">
+      <h3 class="mini">구피</h3>
+    </div>
+    </a>
+  </div>
+</td>
+<td>
+	<div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=shrimpList"><img src="/img/CRS새우.jpg" width="120" height="120">	
+	</div>
+    <div class="info">
+      <h3 class="mini">CRS/새우</h3>
+    </div>
+    </a>
+  </div>
+</td>
+<td> 
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=medakaList"><img src="/img/메다카.jpg" width="120" height="120">	
+	</div>
+    <div class="info">
+      <h3 class="mini">메다카</h3>
+    </div>
+    </a>
+  </div>
+</td>
+<td>
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=turtleList"><img src="/img/거북이.jpg" width="120" height="120">	
+	</div>
+    <div class="info">
+      <h3 class="mini">거북이</h3>
+    </div>
+    </a>
+  </div>
+</td>
+<td>  
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=shellfishList"><img src="/img/갑각패각류.jpg" width="120" height="120">	
+	</div>
+    <div class="info">
+      <h3 class="mini">갑각/패각류</h3>
+    </div>
+    </a>
+  </div>
+</td>
+<td>   
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=ovoviviparousList"><img src="/img/난생난태생송사리.jpg" width="120" height="120">	
+	</div>
+    <div class="info">
+      <h3 class="mini">난생/난태생송사리</h3>
+    </div>
+    </a>
+  </div>
+</td>
+<td>   
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=cichlidList"><img src="/img/시클리드.jpg" width="120" height="120">	
+	</div>
+    <div class="info">
+      <h3 class="mini">시클리드</h3>
+    </div>
+    </a>
+  </div>
+</td>
+<td>  
+  
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=karasinList"><img src="/img/카라신레인보우.jpg" width="120" height="120">	
+	</div>
+    <div class="info">
+      <h3 class="mini">카라신/레인보우</h3>
+    </div>
+    </a>
+  </div>
+</td>
+<td>  
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=koiList"><img src="/img/잉어과.jpg" width="120" height="120">
+	</div>
+    <div class="info">
+      <h3 class="mini">잉어과</h3>
+    </div>
+    </a>
+  </div>
+ </td>
+<td> 
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=catfishList"><img src="/img/메기과.jpg" width="120" height="120">	
+	</div>
+    <div class="info">
+      <h3 class="mini">메기과</h3>
+    </div>
+    </a>
+  </div>
+</td>
+<td>  
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=gouramiList"><img src="/img/베타구라미.jpg" width="120" height="120">
+	</div>
+    <div class="info">
+      <h3 class="mini">베타/구라미</h3>
+    </div>
+    </a>
+  </div>
+</td>
+<td>  
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=goldfishList"><img src="/img/금붕어비단잉어.jpg" width="120" height="120">
+	</div>
+    <div class="info">
+      <h3 class="mini">금붕어/비단잉어</h3>
+    </div>
+    </a>
+  </div>
+</td>
+<td>  
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=discusList"><img src="/img/디스커스엔젤.jpg" width="120" height="120">
+	</div>
+    <div class="info">
+      <h3 class="mini">디스커스/엔젤</h3>
+    </div>
+    </a>
+  </div>
+ </td>
+<td> 
+  <div class="box">
+    <div class="img">
+	<a href="/aquarium/productList?List=largeList"><img src="/img/대형어기수.jpg" width="120" height="120">	
+	</div>
+    <div class="info">
+      <h3 class="mini">대형어/기수</h3>
+    </div>
+    </a>
+  </div>
+</div>
+</table>
+</td>
+<hr class="hr3"/>
+<div style = "line-height:70%"; align = "left">
+	<h3>&nbsp;&nbsp;수생식물 목록 </h3>
+</div>
+<hr class="hr3"/>
+<table style="overflow-y: hidden;" class="scroll-table">
+<tr>
+<div class="box-wrap">
+
+    <th:block th:each="li : ${pli}" >
+    <td>
+      <div class="box">
+        <div class="img">
+        <a th:href="@{/aquarium/order(pid = ${li.pid})}"><img th:src="@{/product/files/{filename}(filename=${li.pimgStr})}" width="150" height="150" alt="Hover Effect" />    
+        </div>
+        <div class="info">
+          <h3 class="mini">[[${li.pname}]]</h3>
+        </div>
+        </a>
+       </div>   
+    </td>
+    </th:block>
+    
+</table>
+</div>
+<hr/>
+</div>
+
+	</div> <!-- content -->
+</div> <!-- box -->
+</section>
+<div  th:replace="include/bottom::footer"></div>
+</html>

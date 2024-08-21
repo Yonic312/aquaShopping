@@ -1,0 +1,176 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<script src="http://code.jquery.com/jquery-1.10.2.js" ></script>
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+
+<head>
+<meta charset="UTF-8">
+<title>majustory.com</title>
+</head>
+<body>
+
+<div th:replace="~{/include/topMenu}"></div>
+<div th:replace="~{/include/top}"></div>
+<section style="min-height: 500px;">
+<div style='background-color:#ffffff; margin:auto; min-height:500px;' class="box1">
+	<div class="content1"align="center">
+		<div style = "line-height:70%;" align = "left">
+		
+<br><br><br><br>
+<div align="center">
+<h2> 장바구니 조회 </h2>
+<br><br>
+
+<form name = "f1">
+<table border="1" style="border-collapse: collapse;">
+<tr style="font-size: 16.5px;"><td width="80px">주문번호</td><td width="100px">상품명</td><td width="80px">상품가격</td><td width="90px">개수</td><td>이미지</td><td width="40px">삭제</td></tr>
+<tr th:if="${li == null or #lists.isEmpty(li)}">
+	<td colspan="6">레코드가 비었습니다.</td>
+</tr>
+<th:block th:each="li, list : ${li}">
+<input type = hidden name = cid th:value="${li.cid}">
+<input type = hidden name = pprice th:value="${li.pprice}">
+	<tr style="font-size: 16.5px;">
+		<td>[[${list.count}]]번</td>
+    	<td>[[${li.pname}]]</td>
+    	<td>[[${li.pprice}]]원 </td>
+    	<td><input style="width: 38px;" type="number" name = amount th:value=${li.amount}>마리 </td>
+    <td align="center" >
+        <img th:src="@{/product/files/{filename}(filename=${li.pimgStr})}" width="100" height="100"> <br>
+    </td>
+    <td><input type = "button" value="삭제" th:onClick="oneDel([[${li.cid}]])"></td>
+	</tr>
+</th:block>
+	 <div class="kg_pay_btn" th:data-name="아쿠아" 
+                             th:data-price="${sumPay}" 
+                             th:data-goodsnum="${mm}" >
+		<input type=hidden id = datepicker value="2024-08-02">
+	</div>
+<tr>	
+	<td colspan = 6 height="40px">           
+		결제금액 : <input type="text" name="sumpay" id="pay" value="1" style="border: none;">
+
+	</td>
+</tr>
+
+<tr>
+	<td colspan = 6>                              
+       <button type="button" onclick="kg_request_pay()" style="width: 80px; height: 35px; background: #000000; border: 1px solid #d4d4d4; color: #ffffff">결제하기</button>&nbsp;
+	   <input type="submit" value="주문수정" onClick="Update()" 
+	       style="width: 80px; height: 35px; background: #b6b6b6; border: 1px solid #d4d4d4; margin: 4px 0;">&nbsp;
+	    <input type = "submit" value = "주문삭제" onClick="Del()" style="width: 80px; height: 35px; background: #fcfcfc; border: 1px solid #d4d4d4;">
+</td>
+</tr>
+
+</table>
+</form>
+</div>
+<br><br><br>
+</div>
+</div> <!-- content -->
+</div> <!-- box -->
+</section>
+
+<script th:inline="javascript">  
+  jQuery.ajaxSetup({cache:false});
+    
+  function kg_request_pay() {
+    
+	//전달할 데이터
+	// data-name(상품이름) : 3개월무료사용, dat-price 가격 :, datagoodsum(주문 번호) : 70001번호
+	var selectedDate = document.getElementById("datepicker").value;
+    var selectedGoodsName = document.querySelector(".kg_pay_btn").getAttribute("data-name");
+    var selectedGoodsPrice = document.querySelector(".kg_pay_btn").getAttribute("data-price");
+    var selectedGoodsNum = document.querySelector(".kg_pay_btn").getAttribute("data-goodsnum");
+   
+    //kg이니시스 결제 API
+    var IMP = window.IMP; // 생략가능
+    IMP.init('imp33165546');  // 가맹점 식별코드
+
+    // IMP.request_pay(param, callback) 결제창 호출
+    IMP.request_pay({
+      pg: "html5_inicis",
+      pay_method: "card",
+      merchant_uid: "gpay_" + new Date().getTime(),   // 주문번호
+      name: "aqua" +" "+ selectedGoodsName,   // 상품이름
+      amount: selectedGoodsPrice,         // 상품가격 (숫자 타입)
+      buyer_email: "ad3121@naver.com",
+      buyer_name: "Jo Hyun JOon",
+      buyer_tel: "01089983757"
+    }, function (rsp) { // callback
+      console.log(rsp);
+      if ( rsp.success ) { //결제 성공시
+        var msg = '결제가 완료되었습니다.'; // 
+        var result = { // rsp는 자동으로 넘어오는 값
+          "mpaynum" : rsp.merchant_uid, //결제번호
+          "membernum" :"AA00001", // 회원번호
+          "mpaymethod":rsp.pay_method, //결제수단
+          "mpayproduct":rsp.name, //헬스장 이름 + 상품이름
+          "mpayprice":rsp.paid_amount, // 결제금액
+          "mpaydate" : new Date().toISOString().slice(0, 10), //결제일
+          "mpaygym" : "aqua", //헬스장 이름
+          "mpayperiod" : selectedDate, //상품이용기간
+          "mpaytime" : "",
+          "trainername":"",
+          "ggoodsnum": selectedGoodsNum, //상품번호
+          "tgoodsint" : null,
+          "gymnum" : "B0001" //헬스장 고유번호
+        }
+        console.log(result);
+
+        $.ajax({
+          url:'/PortOneT/insertMPay',
+          type:'POST',
+          contentType: 'application/json',
+          data:JSON.stringify(result),
+          success: function (res) { // res로 들어간다 OK값이
+            console.log(res);
+            location.href=res;
+          },
+          error: function (err) {
+            console.log(err);
+          }
+        }); //ajax
+      } else {
+          var msg = '결제 실패';
+          msg += '\n에러내용 : ' + rsp.error_msg;
+        }
+      alert(msg);
+    });
+  }
+</script>
+
+<script>
+	var pprices = document.getElementsByName('pprice');
+	var amounts = document.getElementsByName('amount');
+	
+	var sumpay = 0;
+	
+	
+	for (var i = 0; i < pprices.length; i++){
+		pay = pprices[i].value * amounts[i].value;
+		sumpay = sumpay + pay;
+	}
+	
+	f1.sumpay.value = sumpay;
+/* location.href="/aquarium/cartDelete2"; */
+	function Del(){
+		alert('삭제하기');
+		cid = f1.cid.value;
+		f1.action="/aquarium/cartDelete2";
+	}
+	
+	function oneDel(k){
+		alert('One 삭제하기');
+		location.href="/aquarium/cartDeleteOne?cid="+k;
+	}
+	
+	function Update(){
+		alert('수정하기');
+		f1.action="/aquarium/cartUpdate";
+	}
+	
+	
+</script>
+<div th:replace="~{/include/bottom::footer}"></div>
+</body>
+</html>

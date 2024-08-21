@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<nav class="navS">
+	&emsp;&nbsp;&nbsp;
+    <a href="/index">홈</a> &emsp;&nbsp;
+    <!-- 로그인 전 -->	
+    <span sec:authorize="!isAuthenticated()">
+        <a href="/login/loginForm">로그인</a> &emsp;&nbsp;
+    </span>
+
+    <!-- 로그인 후 -->
+    <span sec:authorize="isAuthenticated()">
+        <a href="/user/edit">정보수정</a> &emsp;&nbsp;
+        <a href="/aquarium/cartList">장바구니([[${session.countCart}]]개)</a> &emsp;&nbsp;
+        <a href="/PortOneT/result">주문 조회</a> &emsp;&nbsp;
+    </span>
+
+    <span sec:authorize="hasRole('ROLE_ADMIN')">
+        <!-- <a href="/chatGPT/start">ChatGPT 시작</a> &emsp;&nbsp; -->
+        <a href="/manager/List">상품관리</a> &emsp;&nbsp;
+    </span>    
+
+    <!-- 우측 정렬할 부분 -->
+    <span class="right-align" sec:authorize="isAuthenticated()">
+        <font color="#596EF5">
+            <span sec:authentication="principal.username"></span>님
+            <span sec:authentication="principal.authorities"></span>
+        </font> 
+        <span sec:authorize="isAuthenticated()">&emsp;&nbsp;        
+            <a href="/login/logOut">로그아웃</a> &emsp;&nbsp;
+        </span>
+    </span>
+</nav>
+</body>
+</html>

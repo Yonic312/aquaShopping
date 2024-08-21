@@ -1,0 +1,232 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{/include/topMenu}"></div>
+<div th:replace="~{/include/top}"></div>
+
+<!-- 지도 api -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<script>
+// 본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+
+function sample4_execDaumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            var roadAddr = data.roadAddress;
+            var extraRoadAddr = '';
+            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                extraRoadAddr += data.bname;
+            }
+            if (data.buildingName !== '' && data.apartment === 'Y') {
+                extraRoadAddr += 
+                (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+            }
+            if (extraRoadAddr !== '') {
+                extraRoadAddr = ' (' + extraRoadAddr + ')';
+            }
+            document.getElementById('sample4_postcode').value = data.zonecode;
+            document.getElementById("sample4_roadAddress").value = roadAddr;
+            document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
+            if (roadAddr !== '') {
+                document.getElementById("sample4_extraAddress").value = extraRoadAddr;
+            } else {
+                document.getElementById("sample4_extraAddress").value = '';
+            }
+            var guideTextBox = document.getElementById("guide");
+            if (data.autoRoadAddress) {
+                var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                guideTextBox.style.display = 'block';
+            } else if (data.autoJibunAddress) {
+                var expJibunAddr = data.autoJibunAddress;
+                guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                guideTextBox.style.display = 'block';
+            } else {
+                guideTextBox.innerHTML = '';
+                guideTextBox.style.display = 'none';
+            }
+        }
+    }).open();
+}
+<!-- 지도 api -->
+// 비밀번호와 비밀번호 확인 비교 함수
+
+function comparePasswords() {
+    var password = document.querySelector('input[name="password"]'); 		/* name이 password인 요소의 input 요소를 대입 */
+    var ckpassword = document.querySelector('input[name="ckpassword"]');
+    var message = document.getElementById('password-message'); 				/* 'password-message' div를 참조하고 message 변수를 통해서 값을 주고 받는다 */
+
+    if (password.value === ckpassword.value) {
+        message.style.color = 'green';
+        message.innerHTML = '비밀번호가 일치합니다.';
+    } else {
+        message.style.color = 'red';
+        message.innerHTML = '비밀번호가 일치하지 않습니다.';
+    }
+}
+
+</script>
+
+
+<section>
+    <div style='background-color:#ffffff; margin:auto; min-height:500px;' class="box1">
+        <div class="content1" align="center">
+            <div style="line-height:70%;" align="center">
+
+                <!-- for demo wrap -->
+                <br><br><br><br>
+                <form name='f1' action="/user/update" onsubmit="return ckPwd();">
+                    <table class="info-table" width="800px" height="400px">
+                        <tr>
+                            <td colspan="2">
+                                <div align="left" style="font-size: 30px;">[[${username}]]님의 정보수정</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="100" style="font-size: 19px; text-align: left;">아이디 *</td>
+                            <td style="text-align: left;"><input type="text" name="username" th:value="${uli.username}" style="width: 30%; line-height: 20px; padding: 2px 0;"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 19px; text-align: left;">이메일 *</td>
+                            <td style="text-align: left;"><input type="text" name="email" th:value="${uli.email}" style="width: 30%; line-height: 20px; padding: 2px 0;"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 19px; text-align: left;">휴대전화 *</td>
+                            <td style="text-align: left;"><input type="text" name="phonenumber" th:value="${uli.phonenumber}" style="width: 30%; line-height: 20px; padding: 2px 0;"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 19px; text-align: left;">비밀번호 *</td>
+                            <td style="text-align: left;"><input type="password" name="password" oninput="comparePasswords()" style="width: 30%; line-height: 20px; padding: 2px 0;"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 19px; text-align: left;">비밀번호 확인</td>
+                            <td style="text-align: left;">
+                                <input type="password" name="ckpassword" oninput="comparePasswords()" style="width: 30%; line-height: 20px; padding: 2px 0;">
+                                <div id="password-message"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 19px; text-align: left;">이름 *</td>
+                            <td style="text-align: left;"><input type="text" name="name" th:value="${uli.name}" style="width: 30%; line-height: 20px; padding: 2px 0;"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="font-size: 19px; text-align: left;"> 우편번호 </td>
+                            <td align="left"><input type="text" style="width: 84%; line-height: 20px; padding: 2px 0;" id="sample4_postcode" placeholder="우편번호" name="address1" th:value="${uli.address1}">&nbsp;<input type="button" style="width: 100px; height: 27px;" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"></td>
+                        </tr>
+                        <input type="hidden" id="sample4_roadAddress" placeholder="도로명주소" name="roadAddress" size="40">
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 19px; text-align: left;"> 지번주소 </td>
+                            <td><input type="text" style="width: 100%; line-height: 20px; padding: 2px 0;" id="sample4_jibunAddress" placeholder="지번주소" name="address2" th:value="${uli.address2}"></td>
+                        </tr>
+                        <span id="guide" style="color:#999;display:none"></span>
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 19px; text-align: left;"> 상세주소 </td>
+                            <td><input type="text" style="width: 100%; line-height: 20px; padding: 2px 0;" id="sample4_detailAddress" placeholder="상세주소" name="address3" th:value="${uli.address3}"></td>
+                        </tr>
+                        <input type="hidden" id="sample4_extraAddress" placeholder="참고항목" name="extraAddress">
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">
+                                <div align="left" style="font-size: 19px; font-size: 30px;">추가정보</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" /><br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="100" style="font-size: 19px; text-align: left;">생년월일</td>
+                            <td style="text-align: left;"><input type="date" name="birthday" th:value="${uli.birthday}" style="width: 40%; line-height: 20px; padding: 2px 0;"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 19px; text-align: left;">환불계좌</td>
+                            <td style="text-align: left;"><input type="text" name="refundAccount" th:value="${uli.refundAccount}" style="width: 40%; line-height: 20px; padding: 2px 0;"> &nbsp;(은행명 / 계좌번호)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <hr class="info-table-hr" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center;">
+                                <input type="submit" value="회원정보 수정" style="width: 130px; height: 45px; background: #000000; border: 0px; color: #ffffff;">
+                                &emsp;
+                                <input type="button" value="취소" style="width: 130px; height: 45px; background: #b6b6b6; border: 0px; color: #ffffff;">
+                                &emsp;
+                                <input type="button" value="회원탈퇴" onClick="del()" style="width: 80px; height: 35px; background: #fcfcfc; border: 1px solid #d4d4d4;">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+
+                <br><br><br><br>
+            </div>
+        </div> <!-- content -->
+    </div> <!-- box -->
+</section>
+<div th:replace="~{/include/bottom::footer}"></div>
+
+<script>
+    function del() {
+        alert('del');
+        location.href = "/user/delete";
+    }
+</script>
+</body>
+</html>

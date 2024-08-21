@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aqua.product.productDao">
+
+<insert id="insert" parameterType="com.aqua.product.productVO">
+insert into product(pid, pname, pprice, pkind, pdesc, pimg)
+values(idx.nextval, #{pname}, #{pprice}, #{pkind}, #{pdesc}, #{pimgStr})
+</insert>
+
+<select id="list" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+select pid, pname, pprice, pkind, pdesc, pimg as pimgStr, today, cnt from product
+order by pid desc
+</select>
+
+<select id="getSequence" resultType="int">
+select count(*) from product
+</select>
+
+<select id="nlist" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+select pid, pname, pprice, pkind, pdesc, pimg as pimgStr, today, cnt from(
+select pid, pname, pprice, pkind, pdesc, pimg, today, cnt 
+from product order by today desc) <![CDATA[ where rownum  <= 5]]>
+</select>
+
+<!-- 검색 리스트 -->
+
+<select id="searchList" parameterType="com.aqua.product.productVO"
+resultType="com.aqua.product.productVO">
+select pid, pname, pprice, pkind, pdesc, pimg as pimgStr, today, cnt, cnt,
+       (SELECT COUNT(*) FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+from product
+where pname like '%' || #{keyword} || '%'
+
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if> 
+</select>
+
+
+<!-- 구피 리스트 -->
+<select id="goofyList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '구피'
+
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if> 
+
+</select>
+
+<!-- CRS/새우 리스트 -->
+<select id="shrimpList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+WHERE pkind = 'CRS/새우'
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 메다카 리스트 -->
+<select id="medakaList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '메다카'
+
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 거북이 리스트 -->
+<select id="turtleList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '거북이'
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 갑각/패각류 -->
+<select id="shellfishList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '갑각/패각류'
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 난생/난태생송사리 -->
+<select id="ovoviviparousList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '난생/난태생송사리'
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 시클리드 -->
+<select id="cichlidList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '시클리드' 
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 카라신/레인보우 -->
+<select id="karasinList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '카라신/레인보우' 
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 잉어과　-->
+<select id="koiList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '잉어과'
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 메기과　-->
+<select id="catfishList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '메기과' 
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 베타/구라미　-->
+<select id="gouramiList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '베타/구라미'
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 금붕어/비단잉어　-->
+<select id="goldfishList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '금붕어/비단잉어'
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 디스커스/엔젤　-->
+<select id="discusList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '디스커스/엔젤' 
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 대형어/기수　-->
+<select id="largeList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '대형어/기수' 
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 전체 수생식물　-->
+<select id="wpList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+WHERE PKIND IN ('전경수초', '중경/후경 수초', '활착/구근/부상', '무균배양수초')
+</select>
+
+<!-- 전경수초　-->
+<select id="foreList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '전경수초' 
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 중경/후경 수초　-->
+<select id="middleList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '중경/후경 수초' 
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 활착/구근/부상　-->
+<select id="survivalList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '활착/구근/부상'
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+<!-- 무균배양수초　-->
+<select id="sterileList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+SELECT pid, pname, pprice, pkind, pdesc, pimg AS pimgStr, today, cnt,
+       (SELECT COUNT(*) 
+        FROM review 
+        WHERE review.pid = product.pid) AS cntReview
+FROM product
+where pkind = '무균배양수초' 
+<if test="arrange==null">
+order by pid desc
+</if>
+<if test='arrange=="high"'>
+order by pprice desc, pid desc
+</if>
+<if test='arrange=="low"'>
+order by pprice asc, pid desc
+</if>
+</select>
+
+
+<select id="edit" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+select pid, pname, pprice, pkind, pdesc, pimg as pimgStr, today, cnt from product
+where pid = #{pid}
+</select>
+
+
+<insert id="cartInsert" parameterType="com.aqua.product.productVO">
+insert into cart (cid, pid, pname, pprice, pimg, amount, username)
+values(idx.nextval, #{pid}, #{pname}, #{pprice}, #{pimgStr}, #{amount}, #{username})
+</insert> 
+
+<select id="cartList" parameterType="com.aqua.product.productVO" resultType="com.aqua.product.productVO">
+select cid, pid, pname, pprice, pimg as pimgStr, amount, username from cart
+where username = #{username}
+</select>
+
+<select id="countCart" parameterType="com.aqua.product.productVO" resultType="int">
+select count(*) from cart
+where username = #{username}
+</select>
+
+<delete id="cartDelete" parameterType="com.aqua.product.productVO">
+delete from cart
+</delete>
+
+<delete id="cartDeleteOne" parameterType="com.aqua.product.productVO">
+delete from cart where cid = #{cid}
+</delete>
+
+<update id="cartUpdate">
+update cart set 
+amount = #{amount} where cid = #{cid}
+</update>
+
+<update id="update">
+update product set 
+pid = #{pid}, pname = #{pname}, pprice = #{pprice}, pkind = #{pkind}
+, pdesc = #{pdesc}, pimg = #{pimgStr} where pid = #{pid}
+</update>
+
+<delete id="delete">
+delete from product where pid = #{pid}
+</delete>
+
+</mapper>
